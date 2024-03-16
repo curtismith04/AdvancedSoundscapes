@@ -19,6 +19,8 @@ void UHeightMovementProcessor::ConfigureQueries()
 	UE_VLOG(this, LogMass, Warning, TEXT("Query Configure"));
 	EntityQuery.AddRequirement<FTransformFragment>(EMassFragmentAccess::ReadWrite);
 	EntityQuery.AddRequirement<FHeightMovementFragment>(EMassFragmentAccess::ReadWrite);
+
+	EntityQuery.RegisterWithProcessor(*this);
 }
 
 void UHeightMovementProcessor::Execute(FMassEntityManager& EntityManager, FMassExecutionContext& Context)
@@ -48,8 +50,12 @@ void UHeightMovementProcessor::Execute(FMassEntityManager& EntityManager, FMassE
 				{
 					double Distance = FVector::Dist(CurrentLocation, PlayerCharacter->GetActorLocation());
 					Delta = { 0,0,0 };
-					if (Distance > 1000.0f) { Delta = { 0,0,50 }; }
-					else if (Distance > 1500.0f) { Delta = { 0,0,100 }; }
+					if (Distance > 600.0f)
+					{
+						Delta = { 0,0,50 };
+						if (Distance > 1000.0f) { Delta = { 0,0,100 }; }
+					}
+					
 				}
 				FTransform& Transform = TransformList[EI].GetMutableTransform();
 
