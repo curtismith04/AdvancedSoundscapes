@@ -41,6 +41,32 @@ struct FMassSTEGetPlayerLocation : public FMassStateTreeEvaluatorBase
 
 };
 
+
+USTRUCT()
+struct FMassChangeLocationTaskInstanceData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	FVector TargetLocation;
+
+};
+
+USTRUCT()
+struct FMassChangeLocationTask : public FMassStateTreeTaskBase
+{
+	GENERATED_BODY()
+
+	using FInstanceDataType = FMassChangeLocationTaskInstanceData;
+
+protected:
+	virtual const UStruct* GetInstanceDataType() const override { return FInstanceDataType::StaticStruct(); }
+	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const override;
+	virtual void ExitState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) const override;
+	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) const override;
+
+};
+
 UCLASS()
 class SOUNDSCAPES_API UMassStateTreeData : public UObject
 {
